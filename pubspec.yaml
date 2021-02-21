@@ -1,0 +1,33 @@
+name: cv_demo
+description: this repo for a mobile demo of my cv proj
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  camera: ^0.5.2+1
+  path_provider: ^1.1.0
+  path: ^1.6.2
+
+  cupertino_icons: ^0.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - images/detection_icon.png
+    - images/segmentation_icon.png
+    - images/style_transfer_icon.png
+    - images/coming_soon_icon.png
+
