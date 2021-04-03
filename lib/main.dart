@@ -9,7 +9,10 @@ const Color bgBlack = Color(0xDD1a1a1a);
 const Color mainBlack = Color(0xFF262626);
 const Color mainGrey = Color(0xDD505050);
 
-void main() => runApp(MyApp());
+void main() async {
+  runApp(MyApp());
+}
+
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -19,11 +22,12 @@ class MyApp extends StatelessWidget {
           fontFamily: "Ciaro",
           scaffoldBackgroundColor: bgBlack,
           textTheme:
-              Theme.of(context).textTheme.apply(displayColor: Colors.white)),
+          Theme.of(context).textTheme.apply(displayColor: Colors.white)),
       home: HomeTab(),
     );
   }
 }
+
 
 class HomeTab extends StatefulWidget {
   @override

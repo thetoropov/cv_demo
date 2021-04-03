@@ -12,9 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  camera: ^0.5.2+1
-  path_provider: ^1.1.0
-  path: ^1.6.2
+  path_provider: ^2.0.1
+  path: ^1.8.0
+  http: ^0.13.1
+  image_picker: ^0.7.4
 
   cupertino_icons: ^0.1.3
 
