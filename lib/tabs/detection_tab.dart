@@ -20,12 +20,16 @@ class DetectionTab extends StatefulWidget {
 }
 
 class _DetectionTabState extends State<DetectionTab> {
-  List<String> _data = [];
-  PickedFile file;
-  final _picker = ImagePicker();
   var TEST_URL = Uri.parse("https://cv-demo-app.herokuapp.com/test");
   var FRUIT_DETECTION_URL = Uri.parse("https://cv-demo-app.herokuapp.com/fruit_detection");
+
+  PickedFile file;
+  final _picker = ImagePicker();
+
   TextEditingController queryController = TextEditingController();
+
+  String _result_string = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +65,17 @@ class _DetectionTabState extends State<DetectionTab> {
             onSubmitted: (msg){
               this.getTestResponse();
             },
-          )
-        )
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 15, right: 15, top: 25),
+          height: 150,
+          width: double.infinity,
+          child: Text(
+            _result_string,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
       ]),
     );
   }
@@ -76,6 +89,9 @@ class _DetectionTabState extends State<DetectionTab> {
           body: {"query": queryController.text},
       ).. then((response){
         print(response.body);
+        this.setState((){
+          _result_string = response.body.toString();
+        });
       });
     } finally {
       client.close();
@@ -87,7 +103,6 @@ class _DetectionTabState extends State<DetectionTab> {
     file = await _picker.getImage(source: ImageSource.gallery);
     if (file == null) return;
     final bytes = await file.readAsBytes();
-    print(bytes.toString());
     String fileName = file.path.split("/").last;
     print(fileName);
     final base64Image = base64Encode(bytes);
@@ -98,25 +113,10 @@ class _DetectionTabState extends State<DetectionTab> {
         body: {"image":  base64Image},
       ).. then((response){
         print(response.body);
-      });
-    } finally {
-      client.close();
-    }
-  }
-
-  void _upload() async {
-    if (file == null) return;
-    final bytes = await file.readAsBytes();
-    print(bytes);
-    String fileName = file.path.split("/").last;
-    print(fileName);
-    var client = http.Client();
-    try {
-      client.post(
-        FRUIT_DETECTION_URL,
-        body: {"image": bytes, "name": fileName},
-      ).. then((response){
-        print(response.body);
+        Map<String, dynamic> data = jsonDecode(response.body);
+        this.setState((){
+          _result_string = data['response'].toString();
+        });
       });
     } finally {
       client.close();
