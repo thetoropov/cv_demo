@@ -22,6 +22,7 @@ class DetectionTab extends StatefulWidget {
 class _DetectionTabState extends State<DetectionTab> {
   var TEST_URL = Uri.parse("https://cv-demo-app.herokuapp.com/test");
   var FRUIT_DETECTION_URL = Uri.parse("https://cv-demo-app.herokuapp.com/fruit_detection");
+  var IMAGE_URL = Uri.parse("https://cv-demo-app.herokuapp.com/image_test");
 
   PickedFile file;
   final _picker = ImagePicker();
@@ -29,6 +30,7 @@ class _DetectionTabState extends State<DetectionTab> {
   TextEditingController queryController = TextEditingController();
 
   String _result_string = "";
+  Uint8List _selectedBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,16 @@ class _DetectionTabState extends State<DetectionTab> {
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Get Image'),
+              onPressed: getImageResponse,
+            ),
+            getImageWidget(),
+          ],
+        ),
       ]),
     );
   }
@@ -122,5 +134,44 @@ class _DetectionTabState extends State<DetectionTab> {
       client.close();
     }
   }
+
+  Widget getImageWidget() {
+    if (_selectedBytes != null) {
+      return Image.memory(
+        _selectedBytes,
+        width: 250,
+        height: 250,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        "images/placeholder.jpg",
+        width: 250,
+        height: 250,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  void getImageResponse() async {
+    var client = http.Client();
+    try {
+      client.post(
+        IMAGE_URL,
+        body: {"query": 'text'},
+      ).. then((response){
+        print(response.body);
+        Map<String, dynamic> response_data = jsonDecode(response.body);
+        Uint8List image = base64Decode(response_data['response'].substring(2, response_data['response'].length -1));
+        this.setState((){
+          _selectedBytes = image;
+        });
+
+      });
+    } finally {
+      client.close();
+    }
+  }
+
 
 }

@@ -31,4 +31,5 @@ flutter:
     - images/segmentation_icon.png
     - images/style_transfer_icon.png
     - images/coming_soon_icon.png
+    - images/placeholder.jpg
 
